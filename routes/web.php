@@ -18,7 +18,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/', [FlightController::class, 'index'])->name('flights.index');
+Route::get('/flights', [FlightController::class, 'index'])->name('flights.index');
 Route::post('/search', [FlightController::class, 'search'])->name('flights.search');
 
 require __DIR__.'/auth.php';

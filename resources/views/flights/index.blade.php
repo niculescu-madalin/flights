@@ -39,7 +39,7 @@
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <!-- Search Results -->
                     @if(isset($flights))
-                        <h2 class="my-4">Available Flights</h2>
+                        <h2 class="mb-4 text-2xl font-semibold dark:text-white">Available Flights</h2>
                         @if($flights->isEmpty())
                             <p>No flights found for the selected route.</p>
                         @else
@@ -50,6 +50,7 @@
                                         <th class="p-2 border border-slate-600">Destination</th>
                                         <th class="p-2 border border-slate-600">Departure Time</th>
                                         <th class="p-2 border border-slate-600">Arrival Time</th>
+                                        <th class="p-2 border border-slate-600">Duration</th>
                                         <th class="p-2 border border-slate-600">Price</th>
                                     </tr>
                                 </thead>
@@ -60,6 +61,12 @@
                                             <td class="p-2 border border-slate-700">{{ $flight->destination }}</td>
                                             <td class="p-2 border border-slate-700">{{ $flight->departure_time }}</td>
                                             <td class="p-2 border border-slate-700">{{ $flight->arrival_time }}</td>
+                                            @php
+                                                $d1 = new DateTime($flight->departure_time);
+                                                $d2 = new DateTime($flight->arrival_time);
+                                                $interval = $d1->diff($d2);
+                                            @endphp
+                                            <td class="p-2 border border-slate-700">{{ $interval->format('%dd, %Hh, %Imin') }}</td>
                                             <td class="p-2 border border-slate-700">${{ $flight->price }}</td>
                                         </tr>
                                     @endforeach

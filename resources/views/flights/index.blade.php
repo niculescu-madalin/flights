@@ -96,7 +96,7 @@
                                             <span class="text-sm font-semibold text-slate-400">hours</span>
 
                                             <span class="text-sm font-semibold text-slate-400">{{ $interval->format('%I') }}</span>
-                                            <span class="text-sm font-semibold text-slate-00">min</span>
+                                            <span class="text-sm font-semibold text-slate-400">min</span>
                                         </span>
                                     </div>
 

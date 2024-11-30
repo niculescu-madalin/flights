@@ -70,10 +70,8 @@ class FlightController extends Controller
         'destination' => 'nullable|string',
     ]);
 
-    // Start a query for flights
     $query = Flight::query();
 
-    // Join the airports table for origin and destination
     $query->join('airports as origin_airports', 'flights.origin', '=', 'origin_airports.code')
           ->join('airports as destination_airports', 'flights.destination', '=', 'destination_airports.code');
 

@@ -49,8 +49,8 @@
                                     $d2 = new DateTime($flight->arrival_time);
                                     $interval = $d1->diff($d2);
                                 @endphp
-                                <div class="px-4 py-2 grid grid-cols-12 gap-2 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                                    <div class="col-span-4 flex flex-col gap-1 justify-center">
+                                <div class="px-4 py-4 grid grid-cols-12 gap-2 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                                    <div class="col-span-4 flex flex-col gap-2 justify-center">
                                         <span>
                                             <span class="text-xl flex gap-4 items-center font-semibold"> 
                                                 {{ $flight->originAirport->city }}
@@ -67,27 +67,17 @@
                                                 </span>
                                             </span>
                                         </span>
+                                        <span class="flex flex-row">
+                                            <div class="font-semibold bg-slate-400 w-fit py-0.5 px-2 text-slate-800 rounded-l">
+                                                {{ $d1->format('H:i') }}
+                                            </div>
+                                            <div class="font-semibold border border-slate-400 w-fit py-0.5 px-2 text-slate-400 rounded-r">
+                                                {{  $d1->format('d F Y') }}
+                                            </div>
+                                        </span>
                                     </div>
                                     
-                                    <div class="col-span-3 flex flex-col items-end justify-center">
-                                        <div class="flex flex-row">
-                                            <div class="px-8 rounded-l-lg border border-slate-700 py-0.5 text-lg font-semibold">
-                                                <div>
-                                                    {{ $d1->format('H:i:s')  }}
-                                                </div>
-                                                <div class="text-xs text-slate-300">
-                                                    {{ $d1->format('Y-m-d')  }}
-                                                </div>
-                                            </div>
-                                            <div class="px-8 rounded-r-lg border border-slate-700 py-0.5 text-lg font-semibold">
-                                                <div class="">
-                                                    {{ $d2->format('H:i:s') }}
-                                                </div>
-                                                <div class="text-xs text-slate-300">
-                                                    {{ $d2->format('Y-m-d') }}
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="col-span-2 flex flex-col items-end justify-center">
                                         <span class="flex gap-0.5 w-full justify-center">
                                             <span class="text-sm font-semibold text-slate-400">{{ $interval->format('%d') }}</span>
                                             <span class="text-sm font-semibold text-slate-400">days</span>
@@ -117,9 +107,17 @@
                                                 </span>
                                             </span>
                                         </span>
+                                        <span class="flex flex-row">
+                                            <div class="font-semibold bg-slate-400 w-fit py-0.5 px-2 text-slate-800 rounded-l">
+                                                {{ $d2->format('H:i') }}
+                                            </div>
+                                            <div class="font-semibold border border-slate-400 w-fit py-0.5 px-2 text-slate-400 rounded-r">
+                                                {{  $d2->format('d F Y') }}
+                                            </div>
+                                        </span>
                                     </div>
 
-                                    <span class="font-semibold flex flex-col items-end justify-center text-xl">
+                                    <span class="col-span-2 font-semibold flex flex-col items-end justify-center text-xl">
                                         <span class="">{{ $flight->price }} RON</span>
                                     </span>
                                 </div>

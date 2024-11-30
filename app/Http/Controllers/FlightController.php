@@ -64,24 +64,31 @@ class FlightController extends Controller
     }
 
     public function search(Request $request)
-    {
-        // Validate only the origin as required
-        $request->validate([
-            'origin' => 'required|string',
-            'destination' => 'nullable|string', // Destination is optional
-        ]);
+{
+    $request->validate([
+        'origin' => 'required|string',
+        'destination' => 'nullable|string',
+    ]);
 
-        // Start building the query
-        $query = Flight::where('origin', $request->origin);
+    // Start a query for flights
+    $query = Flight::query();
 
-        // Add a filter for destination if provided
-        if ($request->filled('destination')) {
-            $query->where('destination', $request->destination);
-        }
+    // Join the airports table for origin and destination
+    $query->join('airports as origin_airports', 'flights.origin', '=', 'origin_airports.code')
+          ->join('airports as destination_airports', 'flights.destination', '=', 'destination_airports.code');
 
-        // Get the results
-        $flights = $query->orderBy('departure_time', 'asc')->get();
+    // Filter by origin airport name
+    $query->where('origin_airports.name', 'LIKE', '%' . $request->origin . '%');
 
-        return view('flights.index', compact('flights'));
+    // If destination is provided, filter by destination airport name
+    if ($request->filled('destination')) {
+        $query->where('destination_airports.name', 'LIKE', '%' . $request->destination . '%');
     }
+
+    // Fetch flights with their related airports
+    $flights = $query->select('flights.*')->with(['originAirport', 'destinationAirport'])->orderBy('departure_time', 'asc')->get();
+
+    return view('flights.index', compact('flights'));
+}
+
 }

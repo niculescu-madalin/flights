@@ -4,15 +4,15 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Flight;
+use App\Models\Airport;
 
-class FlightSeeder extends Seeder
+class AirportSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Flight::factory()->count(50)->create();
+        Airport::factory()->count(1)->create();
     }
 }

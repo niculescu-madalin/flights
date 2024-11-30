@@ -57,8 +57,8 @@
                                 <tbody>
                                     @foreach($flights as $flight)
                                         <tr>
-                                            <td class="p-2 border border-slate-700">{{ $flight->origin }}</td>
-                                            <td class="p-2 border border-slate-700">{{ $flight->destination }}</td>
+                                            <td class="p-2 border border-slate-700">{{ $flight->originAirport->name }}</td>
+                                            <td class="p-2 border border-slate-700">{{ $flight->destinationAirport->name }}</td>
                                             <td class="p-2 border border-slate-700">{{ $flight->departure_time }}</td>
                                             <td class="p-2 border border-slate-700">{{ $flight->arrival_time }}</td>
                                             @php

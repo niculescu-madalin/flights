@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('origin');
             $table->string('destination');
+            $table->foreign('origin')->references('code')->on('airports')->onDelete('cascade');
+            $table->foreign('destination')->references('code')->on('airports')->onDelete('cascade');
             $table->datetime('departure_time');
             $table->datetime('arrival_time');
             $table->decimal('price', 10, 2);

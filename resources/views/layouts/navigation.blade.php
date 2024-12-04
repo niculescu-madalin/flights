@@ -8,11 +8,14 @@
                     <a href="{{ route('flights.index') }}">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
                     </a>
+                    <span class="p-1 font-semibold text-lg inline-flex items-center px-1 pt-1 text-gray-800 dark:text-gray-200">
+                        Flights
+                    </span>
                 </div>
+                
 
                 <!-- Navigation Links -->
             </div>
-
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 @if (Route::has('login'))

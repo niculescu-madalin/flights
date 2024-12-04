@@ -1,44 +1,45 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <form method="POST" action="{{ route('flights.search') }}" class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                @csrf
-                <div class="flex flex-row items-center gap-2">
-                    <div class="col-md-4 grow-1">
-                        <x-text-input id="origin" 
-                                    type="text" 
-                                    name="origin" 
-                                    class="form-control" 
-                                    placeholder="Origin" 
-                                    required />
-                    </div>
-                    <div class="col-md-4 grow-1">
-                        <x-text-input id="destination" 
-                                    type="text" 
-                                    name="destination" 
-                                    class="form-control" 
-                                    placeholder="Destination (optional)" />
-                    </div>
-                    <div class="col-md-4">
-                    
-                        <x-primary-button type="submit" class="btn btn-primary w-100">
-                            Search
-                        </x-primary-button>
-                    </div>
-                </div>
-            </form> 
-        </h2>
-    </x-slot>
-
     <!-- Search Form -->
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 my-4 font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <form 
+            method="POST" 
+            action="{{ route('flights.search') }}" 
+            class="">
+            @csrf
+            <div class="flex flex-row items-center gap-2">
+                <div class="col-md-4 grow-1 w-full flex flex-row items-center text-slate-400">
+                    <x-text-input id="origin" 
+                                type="text" 
+                                name="origin" 
+                                class="w-full form-control" 
+                                placeholder="Origin" 
+                                required />
+                </div>
+                <div class="col-md-4 grow-1 w-full">
+                    <x-text-input id="destination" 
+                                type="text" 
+                                name="destination" 
+                                class="form-control w-full" 
+                                placeholder="Destination (optional)" />
+                </div>
+                <div class="col-md-4">
+                
+                    <x-primary-button 
+                    type="submit" 
+                    class="btn btn-primary w-100">
+                        Search
+                    </x-primary-button>
+                </div>
+            </div>
+        </form> 
+    </div>
 
-
-    <div class="py-12">
+    <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="text-gray-900 dark:text-gray-100">
                 <!-- Search Results -->
                 @if(isset($flights))
-                    <h2 class="mb-4 text-2xl font-semibold dark:text-white">Available Flights</h2>
+                    <h2 class="mb-4 text-2xl font-semibold dark:text-white">Direct Flights</h2>
                     @if($flights->isEmpty())
                         <p>No flights found for the selected route.</p>
                     @else
@@ -78,15 +79,15 @@
                                     </div>
                                     
                                     <div class="col-span-2 flex flex-col items-end justify-center">
-                                        <span class="flex gap-0.5 w-full justify-center">
-                                            <span class="text-sm font-semibold text-slate-400">{{ $interval->format('%d') }}</span>
-                                            <span class="text-sm font-semibold text-slate-400">days</span>
+                                        <span class="text-base font-semibold text-slate-200 flex gap-0.5 w-full justify-center">
+                                            <span>{{ $interval->format('%d') }}</span>
+                                            <span>days</span>
 
-                                            <span class="text-sm font-semibold text-slate-400">{{ $interval->format('%H') }}</span>
-                                            <span class="text-sm font-semibold text-slate-400">hours</span>
+                                            <span>{{ $interval->format('%H') }}</span>
+                                            <span>hours</span>
 
-                                            <span class="text-sm font-semibold text-slate-400">{{ $interval->format('%I') }}</span>
-                                            <span class="text-sm font-semibold text-slate-400">min</span>
+                                            <span>{{ $interval->format('%I') }}</span>
+                                            <span>min</span>
                                         </span>
                                     </div>
 
@@ -117,7 +118,7 @@
                                         </span>
                                     </div>
 
-                                    <span class="col-span-2 font-semibold flex flex-col items-end justify-center text-xl">
+                                    <span class="col-span-2 font-semibold flex flex-col items-center justify-center text-xl">
                                         <span class="">{{ $flight->price }} RON</span>
                                     </span>
                                 </div>
@@ -125,7 +126,33 @@
                         </div>
                         </ul>
                     @endif
-                @endif 
+                @endif
+                @if(isset($connectingFlights))
+                    <h2 class="mt-4 mb-4 text-2xl font-semibold dark:text-white">Connecting Flights</h2>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>First Leg: Origin</th>
+                                <th>First Leg: Stopover</th>
+                                <th>Second Leg: Destination</th>
+                                <th>Departure</th>
+                                <th>Arrival</th>
+                                <th>Total Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($connectingFlights as $flightPair)
+                                <tr>
+                                    <td>{{ $flightPair['first_leg']->origin_name }}</td>
+                                    <td>{{ $flightPair['first_leg']->stopover_name }}</td>
+                                    <td>{{ $flightPair['second_leg']->destination_name }}</td>
+                                    <td>{{ $flightPair['first_leg']->departure_time }} - {{ $flightPair['second_leg']->arrival_time }}</td>
+                                    <td>${{ $flightPair['total_price'] }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
             </div>
         </div>
     </div>

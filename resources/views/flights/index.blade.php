@@ -11,7 +11,7 @@
                     <x-text-input id="origin" 
                                 type="text" 
                                 name="origin" 
-                                class="w-full form-control" 
+                                class="w-full form-control p-4" 
                                 placeholder="Origin" 
                                 required />
                 </div>
@@ -19,14 +19,13 @@
                     <x-text-input id="destination" 
                                 type="text" 
                                 name="destination" 
-                                class="form-control w-full" 
+                                class="form-control w-full p-4" 
                                 placeholder="Destination (optional)" />
                 </div>
-                <div class="col-md-4">
-                
+                <div class="col-md-4 h-full">
                     <x-primary-button 
                     type="submit" 
-                    class="btn btn-primary w-100">
+                    class="btn btn-primary w-100 h-full py-4">
                         Search
                     </x-primary-button>
                 </div>

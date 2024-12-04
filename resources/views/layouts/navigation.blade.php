@@ -8,13 +8,20 @@
                     <a href="{{ route('flights.index') }}">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
                     </a>
-                    <span class="p-1 font-semibold text-lg inline-flex items-center px-1 pt-1 text-gray-800 dark:text-gray-200">
+                    <span class="pl-4 pr-8 p-1 font-semibold text-lg inline-flex items-center px-1 pt-1 text-gray-800 dark:text-gray-200">
                         Flights
                     </span>
                 </div>
                 
 
                 <!-- Navigation Links -->
+                @auth
+                    @if(Auth::user()->role === "admin")
+                        <x-nav-link href="/airports" :active="request()->is('airports')">
+                            Airports
+                        </x-nav-link>
+                    @endif
+                @endauth
             </div>
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">

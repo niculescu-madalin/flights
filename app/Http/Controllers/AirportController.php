@@ -13,7 +13,7 @@ class AirportController extends Controller
     public function index()
     {
         $airports = Airport::all();
-        // return view('airports.index', compact('airports'));
+        return view('airports.index', compact('airports'));
     }
 
     /**
@@ -21,7 +21,7 @@ class AirportController extends Controller
      */
     public function create()
     {
-        // return view('airports.create');
+        return view('airports.create');
     }
 
     /**
@@ -38,7 +38,7 @@ class AirportController extends Controller
 
         Airport::create($request->all());
 
-        // return redirect()->route('airports.index')->with('success', 'Airport created successfully.');
+        return redirect()->route('airports.index')->with('success', 'Airport created successfully.');
     }
 
     /**
@@ -46,7 +46,7 @@ class AirportController extends Controller
      */
     public function show(Airport $airport)
     {
-        //
+        return view('airports.show', ['airport' => $airport]);
     }
 
     /**
@@ -54,7 +54,7 @@ class AirportController extends Controller
      */
     public function edit(Airport $airport)
     {
-        // return view('airports.edit', compact('airport'));
+        return view('airports.edit', compact('airport'));
     }
 
     /**
@@ -71,7 +71,7 @@ class AirportController extends Controller
 
         $airport->update($request->all());
 
-        // return redirect()->route('airports.index')->with('success', 'Airport updated successfully.');
+        return redirect()->route('airports.index')->with('success', 'Airport updated successfully.');
     }
 
     /**
@@ -81,6 +81,6 @@ class AirportController extends Controller
     {
         $airport->delete();
 
-        // return redirect()->route('airports.index')->with('success', 'Airport deleted successfully.');
+        return redirect()->route('airports.index')->with('success', 'Airport deleted successfully.');
     }
 }

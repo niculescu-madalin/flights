@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AirportController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FlightController;
+use App\Models\Airport;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -21,5 +23,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/', [FlightController::class, 'index'])->name('flights.index');
 Route::get('/flights', [FlightController::class, 'index'])->name('flights.index');
 Route::post('/search', [FlightController::class, 'search'])->name('flights.search');
+
+Route::resource('airports', AirportController::class);
 
 require __DIR__.'/auth.php';

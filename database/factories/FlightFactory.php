@@ -22,21 +22,27 @@ class FlightFactory extends Factory
 
     public function definition(): array
     {
-         // Fetch all airport codes
-         $airportCodes = Airport::pluck('code')->toArray();
+        // Fetch all airport codes, fallback to static if none
+        $airportCodes = Airport::pluck('code')->toArray();
+        if (count($airportCodes) < 2) {
+            $airportCodes = ['JFK', 'LHR', 'CDG', 'DXB', 'HND'];
+        }
 
-         // Ensure the origin and destination are different
-         $origin = $this->faker->randomElement($airportCodes);
-         do {
-             $destination = $this->faker->randomElement($airportCodes);
-         } while ($origin === $destination);
- 
-         return [
-             'origin' => $origin,
-             'destination' => $destination,
-             'departure_time' => $this->faker->dateTimeBetween('now', '+1 week'),
-             'arrival_time' => $this->faker->dateTimeBetween('+1 week', '+2 weeks'),
-             'price' => $this->faker->randomFloat(2, 50, 500),
-         ];
+        // Ensure the origin and destination are different
+        $origin = $this->faker->randomElement($airportCodes);
+        do {
+            $destination = $this->faker->randomElement($airportCodes);
+        } while ($origin === $destination);
+
+        $departure = $this->faker->dateTimeBetween('now', '+1 week');
+        $arrival = (clone $departure)->modify('+'.rand(2,12).' hours');
+
+        return [
+            'origin' => $origin,
+            'destination' => $destination,
+            'departure_time' => $departure,
+            'arrival_time' => $arrival,
+            'price' => $this->faker->randomFloat(2, 50, 500),
+        ];
     }
 }

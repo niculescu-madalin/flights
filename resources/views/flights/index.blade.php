@@ -181,7 +181,7 @@
                                     <div>
                                         <span class="font-bold">Total: </span> {{ $flight->price }} RON
                                     </div>
-                                    <form method="POST" action="{{ route('flights.pay') }}" class="inline">
+                                    <form method="POST" action="{{ route('flights.pay') }}">
                                         @csrf
                                         <input type="hidden" name="flight_id" value="{{ $flight->id }}">
                                         <input type="hidden" name="amount" value="{{ $flight->price }}">

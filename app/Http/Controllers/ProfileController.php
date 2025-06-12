@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Transaction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,5 +57,15 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    /**
+     * Display the user's transaction history.
+     */
+    public function history()
+    {
+        $user = auth()->user();
+        $transactions = $user->transactions()->with('flight')->latest()->get();
+        return view('profile.transaction-history', compact('transactions'));
     }
 }

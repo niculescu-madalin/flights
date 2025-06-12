@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Flight;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Stripe\Stripe;
 use Stripe\Checkout\Session as StripeSession;
 
@@ -167,9 +169,9 @@ class FlightController extends Controller
         $flight = \App\Models\Flight::findOrFail($request->flight_id);
         $amount = $request->amount;
 
-        Stripe::setApiKey(config('services.stripe.secret'));
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
-        $session = StripeSession::create([
+        $session = \Stripe\Checkout\Session::create([
             'payment_method_types' => ['card'],
             'mode' => 'payment',
             'line_items' => [[
@@ -178,14 +180,42 @@ class FlightController extends Controller
                     'product_data' => [
                         'name' => 'Flight from ' . $flight->origin . ' to ' . $flight->destination,
                     ],
-                    'unit_amount' => intval($amount * 100), // Stripe expects amount in cents
+                    'unit_amount' => intval($amount * 100),
                 ],
                 'quantity' => 1,
             ]],
-            'success_url' => url('/flights?success=1'),
+            'success_url' => url('/flights/pay/success?session_id={CHECKOUT_SESSION_ID}'),
             'cancel_url' => url('/flights?canceled=1'),
         ]);
 
+        // Optionally, you can store a pending transaction here
+        if (Auth::check()) {
+            Transaction::create([
+                'user_id' => Auth::id(),
+                'flight_id' => $flight->id,
+                'stripe_payment_id' => $session->id,
+                'amount' => $amount,
+                'currency' => 'ron',
+                'status' => 'pending',
+            ]);
+        }
+
         return redirect($session->url);
+    }
+
+    public function paySuccess(Request $request)
+    {
+        $session_id = $request->get('session_id');
+        if (!$session_id) {
+            return redirect('/flights')->with('error', 'No session ID.');
+        }
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+        $session = \Stripe\Checkout\Session::retrieve($session_id);
+        $transaction = Transaction::where('stripe_payment_id', $session_id)->first();
+        if ($transaction) {
+            $transaction->status = $session->payment_status === 'paid' ? 'succeeded' : $session->payment_status;
+            $transaction->save();
+        }
+        return redirect('/profile/transactions')->with('success', 'Payment successful!');
     }
 }

@@ -18,12 +18,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile/transactions', [ProfileController::class, 'history'])->name('profile.transactions');
 });
 
 Route::get('/', [FlightController::class, 'index'])->name('flights.index');
 Route::get('/flights', [FlightController::class, 'index'])->name('flights.index');
 Route::post('/search', [FlightController::class, 'search'])->name('flights.search');
 Route::post('/flights/pay', [FlightController::class, 'pay'])->name('flights.pay');
+Route::get('/flights/pay/success', [FlightController::class, 'paySuccess'])->name('flights.pay.success');
 
 Route::resource('airports', AirportController::class);
 

@@ -13,6 +13,10 @@ class FlightSeeder extends Seeder
      */
     public function run(): void
     {
+        // Ensure airports exist before creating flights
+        if (\App\Models\Airport::count() < 2) {
+            \App\Models\Airport::factory()->count(5)->create();
+        }
         Flight::factory()->count(50)->create();
     }
 }

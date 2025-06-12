@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/', [FlightController::class, 'index'])->name('flights.index');
 Route::get('/flights', [FlightController::class, 'index'])->name('flights.index');
 Route::post('/search', [FlightController::class, 'search'])->name('flights.search');
+Route::post('/flights/pay', [FlightController::class, 'pay'])->name('flights.pay');
 
 Route::resource('airports', AirportController::class);
 

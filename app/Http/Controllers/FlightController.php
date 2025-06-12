@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Flight;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Stripe\Stripe;
+use Stripe\Checkout\Session as StripeSession;
 
 class FlightController extends Controller
 {
@@ -153,5 +155,37 @@ class FlightController extends Controller
 
 
     return view('flights.index', compact('flights', 'connectingFlights'));
+    }
+
+    public function pay(Request $request)
+    {
+        $request->validate([
+            'flight_id' => 'required|exists:flights,id',
+            'amount' => 'required|numeric|min:1',
+        ]);
+
+        $flight = \App\Models\Flight::findOrFail($request->flight_id);
+        $amount = $request->amount;
+
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        $session = StripeSession::create([
+            'payment_method_types' => ['card'],
+            'mode' => 'payment',
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'ron',
+                    'product_data' => [
+                        'name' => 'Flight from ' . $flight->origin . ' to ' . $flight->destination,
+                    ],
+                    'unit_amount' => intval($amount * 100), // Stripe expects amount in cents
+                ],
+                'quantity' => 1,
+            ]],
+            'success_url' => url('/flights?success=1'),
+            'cancel_url' => url('/flights?canceled=1'),
+        ]);
+
+        return redirect($session->url);
     }
 }

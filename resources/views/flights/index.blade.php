@@ -181,7 +181,12 @@
                                     <div>
                                         <span class="font-bold">Total: </span> {{ $flight->price }} RON
                                     </div>
-                                    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Buy</button>
+                                    <form method="POST" action="{{ route('flights.pay') }}" class="inline">
+                                        @csrf
+                                        <input type="hidden" name="flight_id" value="{{ $flight->id }}">
+                                        <input type="hidden" name="amount" value="{{ $flight->price }}">
+                                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Buy</button>
+                                    </form>
                                 </div>
                             </details>
                         @endforeach       

@@ -16,7 +16,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('auth.login');
+        $redirectTo = request('redirect_to');
+        return view('auth.login', compact('redirectTo'));
     }
 
     /**
@@ -26,8 +27,12 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
-        $request->session()->regenerate();
+        request()->session()->regenerate();
 
+        $redirectTo = request('redirect_to');
+        if ($redirectTo) {
+            return redirect($redirectTo);
+        }
         return redirect()->intended(route('flights.index', absolute: false));
     }
 

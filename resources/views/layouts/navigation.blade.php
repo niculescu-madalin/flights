@@ -21,6 +21,9 @@
                             Airports
                         </x-nav-link>
                     @endif
+                    <x-nav-link href="{{ route('profile.transactions') }}" :active="request()->is('profile/transactions')">
+                        Transaction History
+                    </x-nav-link>
                 @endauth
             </div>
             <!-- Settings Dropdown -->

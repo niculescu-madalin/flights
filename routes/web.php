@@ -26,4 +26,7 @@ Route::post('/search', [FlightController::class, 'search'])->name('flights.searc
 
 Route::resource('airports', AirportController::class);
 
+// Airport suggestions for autocomplete
+Route::get('/airport-suggest', [AirportController::class, 'suggest'])->name('airports.suggest');
+
 require __DIR__.'/auth.php';

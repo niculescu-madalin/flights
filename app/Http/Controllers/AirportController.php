@@ -83,4 +83,19 @@ class AirportController extends Controller
 
         return redirect()->route('airports.index')->with('success', 'Airport deleted successfully.');
     }
+
+    /**
+     * Return airport suggestions for autocomplete.
+     */
+    public function suggest(Request $request)
+    {
+        $query = $request->get('q', '');
+        $airports = Airport::where('name', 'LIKE', "%{$query}%")
+            ->orWhere('city', 'LIKE', "%{$query}%")
+            ->orWhere('code', 'LIKE', "%{$query}%")
+            ->orWhere('id', 'LIKE', "%{$query}%")
+            ->limit(10)
+            ->get(['id', 'name', 'city', 'code', 'country']);
+        return response()->json($airports);
+    }
 }

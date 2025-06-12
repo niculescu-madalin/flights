@@ -7,20 +7,75 @@
             class="">
             @csrf
             <div class="flex flex-row items-center gap-2">
-                <div class="col-md-4 grow-1 w-full flex flex-row items-center text-slate-400">
-                    <x-text-input id="origin" 
-                                type="text" 
-                                name="origin" 
-                                class="w-full form-control p-4" 
-                                placeholder="Origin" 
-                                required />
+                <!-- Origin Airport Autocomplete with original style -->
+                <div x-data="{ isOpen: false, results: [], searchTerm: '' }" class="relative w-full" @click.away="isOpen = false">
+                    <x-text-input
+                        id="origin"
+                        name="origin"
+                        type="text"
+                        class="w-full form-control p-4"
+                        placeholder="Origin"
+                        autocomplete="off"
+                        x-model="searchTerm"
+                        @input.debounce.300ms="
+                            if (searchTerm.length > 1) {
+                                fetch(`/airport-suggest?q=${encodeURIComponent(searchTerm)}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        results = data;
+                                        isOpen = true;
+                                    });
+                            } else {
+                                results = [];
+                                isOpen = false;
+                            }
+                        "
+                        @focus="searchTerm.length > 1 && (isOpen = true)"
+                    />
+                    <div x-show="isOpen" class="absolute w-full mt-1 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-50 max-h-60 overflow-auto text-white">
+                        <template x-for="result in results" :key="result.id">
+                            <div @mousedown.prevent="searchTerm = result.code; isOpen = false; $el.blur();" class="px-4 py-2 cursor-pointer hover:bg-blue-900 hover:text-blue-200">
+                                <span x-text="result.name"></span>
+                                <span class="text-xs text-gray-400" x-text="`(${result.code}) - ${result.city}, ${result.country}`"></span>
+                            </div>
+                        </template>
+                        <div x-show="results.length === 0 && searchTerm.length > 1" class="px-4 py-2 text-gray-400">No results</div>
+                    </div>
                 </div>
-                <div class="col-md-4 grow-1 w-full">
-                    <x-text-input id="destination" 
-                                type="text" 
-                                name="destination" 
-                                class="form-control w-full p-4" 
-                                placeholder="Destination (optional)" />
+                <!-- Destination Airport Autocomplete with original style -->
+                <div x-data="{ isOpen: false, results: [], searchTerm: '' }" class="relative w-full" @click.away="isOpen = false">
+                    <x-text-input
+                        id="destination"
+                        name="destination"
+                        type="text"
+                        class="w-full form-control p-4"
+                        placeholder="Destination (optional)"
+                        autocomplete="off"
+                        x-model="searchTerm"
+                        @input.debounce.300ms="
+                            if (searchTerm.length > 1) {
+                                fetch(`/airport-suggest?q=${encodeURIComponent(searchTerm)}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        results = data;
+                                        isOpen = true;
+                                    });
+                            } else {
+                                results = [];
+                                isOpen = false;
+                            }
+                        "
+                        @focus="searchTerm.length > 1 && (isOpen = true)"
+                    />
+                    <div x-show="isOpen" class="absolute w-full mt-1 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-50 max-h-60 overflow-auto text-white">
+                        <template x-for="result in results" :key="result.id">
+                            <div @mousedown.prevent="searchTerm = result.code; isOpen = false; $el.blur();" class="px-4 py-2 cursor-pointer hover:bg-blue-900 hover:text-blue-200">
+                                <span x-text="result.name"></span>
+                                <span class="text-xs text-gray-400" x-text="`(${result.code}) - ${result.city}, ${result.country}`"></span>
+                            </div>
+                        </template>
+                        <div x-show="results.length === 0 && searchTerm.length > 1" class="px-4 py-2 text-gray-400">No results</div>
+                    </div>
                 </div>
                 <div class="col-md-4 h-full">
                     <x-primary-button 
@@ -162,6 +217,7 @@
         </div>
     </div>
 
+    <script type="module" src="/build/assets/airport-autocomplete.js"></script>
     <!-- from cdn -->
     <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/collapse.js"></script>
 </x-app-layout>

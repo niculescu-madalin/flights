@@ -79,17 +79,19 @@ class FlightController extends Controller
         $query->join('airports as origin_airports', 'flights.origin', '=', 'origin_airports.code')
               ->join('airports as destination_airports', 'flights.destination', '=', 'destination_airports.code');
     
-        // Search by origin airport name or city
+        // Search by origin airport name, city, or code
         $query->where(function ($subQuery) use ($origin) {
             $subQuery->whereRaw('LOWER(REPLACE(origin_airports.name, "  ", " ")) LIKE ?', ['%' . strtolower($origin) . '%'])
-                     ->orWhereRaw('LOWER(REPLACE(origin_airports.city, "  ", " ")) LIKE ?', ['%' . strtolower($origin) . '%']);
+                     ->orWhereRaw('LOWER(REPLACE(origin_airports.city, "  ", " ")) LIKE ?', ['%' . strtolower($origin) . '%'])
+                     ->orWhereRaw('LOWER(origin_airports.code) = ?', [strtolower($origin)]);
         });
     
-        // If destination is provided, search by destination airport name or city
+        // If destination is provided, search by destination airport name, city, or code
         if ($destination) {
             $query->where(function ($subQuery) use ($destination) {
                 $subQuery->whereRaw('LOWER(REPLACE(destination_airports.name, "  ", " ")) LIKE ?', ['%' . strtolower($destination) . '%'])
-                         ->orWhereRaw('LOWER(REPLACE(destination_airports.city, "  ", " ")) LIKE ?', ['%' . strtolower($destination) . '%']);
+                         ->orWhereRaw('LOWER(REPLACE(destination_airports.city, "  ", " ")) LIKE ?', ['%' . strtolower($destination) . '%'])
+                         ->orWhereRaw('LOWER(destination_airports.code) = ?', [strtolower($destination)]);
             });
         }
     
@@ -104,11 +106,13 @@ class FlightController extends Controller
         ->join('airports as destination_airports', 'flights.destination', '=', 'destination_airports.code')
         ->where(function ($query) use ($origin) {
             $query->where('origin_airports.name', 'LIKE', '%' . $origin . '%')
-                  ->orWhere('origin_airports.city', 'LIKE', '%' . $origin . '%');
+                  ->orWhere('origin_airports.city', 'LIKE', '%' . $origin . '%')
+                  ->orWhereRaw('LOWER(origin_airports.code) = ?', [strtolower($origin)]);
         })
         ->where(function ($query) use ($destination) {
             $query->where('destination_airports.name', 'NOT LIKE', '%' . $destination . '%')
-                  ->where('destination_airports.city', 'NOT LIKE', '%' . $destination . '%');
+                  ->where('destination_airports.city', 'NOT LIKE', '%' . $destination . '%')
+                  ->whereRaw('LOWER(destination_airports.code) != ?', [strtolower($destination)]);
         })
         ->select(
             'flights.*',

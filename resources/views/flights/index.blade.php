@@ -134,12 +134,16 @@
                                 
                                 <div class="col-span-3 flex flex-col items-end justify-center">
                                     <span class="text-base font-semibold text-slate-200 flex gap-0.5 w-full justify-center">
-                                        <span>{{ $interval->format('%d') }}</span>
-                                        <span>days</span>
-                                        <span>{{ $interval->format('%H') }}</span>
-                                        <span>hours</span>
-                                        <span>{{ $interval->format('%I') }}</span>
-                                        <span>min</span>
+                                        @if($interval->d > 0)
+                                            <span>{{ $interval->format('%d') }}</span>
+                                            <span>days</span>
+                                        @endif
+                                        <span class="text-slate-200 text-3xl">{{ $interval->format('%H') }}</span>
+                                        <span class="text-slate-500 text-3xl">hours</span>
+                                        @if($interval->i > 0)
+                                            <span>{{ $interval->format('%I') }}</span>
+                                            <span>min</span>
+                                        @endif
                                     </span>
                                 </div>
                                 <div class="col-span-4 items-end flex flex-col gap-1 justify-center">
@@ -174,7 +178,7 @@
                                     </svg>   
                                 </span>    
                             </summary>
-                                <div class="mt-1 px-4 py-4 bg-white dark:bg-gray-600 overflow-hidden shadow-sm rounded-t-lg">
+                                <div class="mt-1 px-4 py-4 bg-white dark:bg-gray-700 overflow-hidden shadow-sm rounded-t-lg">
                                 
                                 </div>
                                 <div class="flex items-center justify-between px-4 py-4 bg-white dark:bg-gray-700 overflow-hidden shadow-sm rounded-b-lg">
@@ -197,7 +201,7 @@
                     </div>
                 @endif
             @endif
-            @if(isset($connectingFlights))
+            {{-- @if(isset($connectingFlights))
                 <h2 class="mt-4 mb-4 text-2xl font-semibold dark:text-white">Connecting Flights</h2>
                 <table class="table table-striped">
                     <thead>
@@ -222,7 +226,7 @@
                         @endforeach
                     </tbody>
                 </table>
-            @endif
+            @endif --}}
         </div>
     </div>
 
